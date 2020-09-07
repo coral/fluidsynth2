@@ -21,10 +21,10 @@ func main() {
 
 	// player.AddMem(dat)
 
-	s.SetString("audio.driver", "coreaudio")
+	// Easy way to set audio backend
+	//s.SetString("audio.driver", "coreaudio")
 
-	adriver := fluidsynth2.NewAudioDriver(s, synth)
-	_ = adriver
+	fluidsynth2.NewAudioDriver(s, synth)
 
 	player.Play()
 	player.Join()
