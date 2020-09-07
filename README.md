@@ -26,7 +26,7 @@ This example will play a MIDI file from disk.
 You need a MIDI file and a Soundfont in order for audio to play.
 
 ```go
-    s := fluidsynth2.NewSettings()
+	s := fluidsynth2.NewSettings()
 	synth := fluidsynth2.NewSynth(s)
 	i := synth.SFLoad("soundfont.sf2", false)
 
