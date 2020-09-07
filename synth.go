@@ -14,7 +14,7 @@ func NewSynth(settings Settings) Synth {
 	return Synth{C.new_fluid_synth(settings.ptr)}
 }
 
-func (s *Synth) Delete() {
+func (s *Synth) Close() {
 	C.delete_fluid_synth(s.ptr)
 }
 

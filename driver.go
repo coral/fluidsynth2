@@ -13,7 +13,7 @@ func NewAudioDriver(settings Settings, synth Synth) AudioDriver {
 	return AudioDriver{C.new_fluid_audio_driver(settings.ptr, synth.ptr)}
 }
 
-func (d *AudioDriver) Delete() {
+func (d *AudioDriver) Close() {
 	C.delete_fluid_audio_driver(d.ptr)
 }
 

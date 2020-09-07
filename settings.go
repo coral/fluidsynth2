@@ -23,6 +23,10 @@ func NewSettings() Settings {
 	return Settings{ptr: C.new_fluid_settings()}
 }
 
+func (s *Settings) Close() {
+	C.delete_fluid_settings(s.ptr)
+}
+
 func (s *Settings) SetInt(name string, val int) bool {
 	return C.fluid_settings_setint(s.ptr, cname(name), C.int(val)) == 1
 }

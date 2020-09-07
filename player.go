@@ -14,6 +14,10 @@ func NewPlayer(synth Synth) Player {
 	return Player{C.new_fluid_player(synth.ptr)}
 }
 
+func (p *Player) Close() {
+	C.delete_fluid_player(p.ptr)
+}
+
 func (p *Player) Add(filename string) int {
 	cpath := C.CString(filename)
 	defer C.free(unsafe.Pointer(cpath))
