@@ -37,3 +37,11 @@ func (p *Player) Play() int {
 func (p *Player) Join() {
 	C.fluid_player_join(p.ptr)
 }
+
+func (p *Player) GetBPM() int {
+	return int(C.fluid_player_get_bpm(p.ptr))
+}
+
+func (p *Player) SetBPM(bpm int) {
+	C.fluid_player_set_bpm(p.ptr, C.int(bpm))
+}
