@@ -23,15 +23,6 @@ func NewSettings() Settings {
 	return Settings{ptr: C.new_fluid_settings()}
 }
 
-func cname(name string) *C.char {
-	if cname, ok := settingNames[name]; ok {
-		return cname
-	}
-	cname := C.CString(name)
-	settingNames[name] = cname
-	return cname
-}
-
 func (s *Settings) SetInt(name string, val int) bool {
 	return C.fluid_settings_setint(s.ptr, cname(name), C.int(val)) == 1
 }
