@@ -1,10 +1,8 @@
 # Fluidsynth2 bindings for Go
 
-This package allows you to interface with Fluidsynth using Go.
+This package allows you to interface with [FluidSynth 2](http://www.fluidsynth.org/) using Go. FluidSynth is great for playing back MIDI, both realtime through the audio output or to a file for offline consumption. There is just something magical about hearing a terrible MIDI cover of Neil Young playing back through a bad soundfont that prompted me to work on these bindings.
 
-It's mostly based on the repo by [sqweek](https://github.com/sqweek/fluidsynth) with updates for Fluidsynth2 and additions to the API that allows for playback and not only note sending.
-
-Check in examples to get the general gist on how to play a MIDI file.
+It's based on the repo by [sqweek](https://github.com/sqweek/fluidsynth) with updates for FluidSynth2 and a lot more that allows you to actually use most of the functionality in FluidSynth.
 
 ## Installation
 
@@ -80,5 +78,9 @@ fluidsynth2.NewAudioDriver(s, synth)
 player.Play()
 player.Join()
 ```
+
+## Contributing
+
+m8 just open a PR with some gucchimucchi code and I'll review it.
 
 ![KADSBUGGEL](https://raw.githubusercontent.com/coral/fluidsynth2/master/kadsbuggel.png)
