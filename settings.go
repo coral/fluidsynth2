@@ -5,8 +5,6 @@ package fluidsynth2
 #include <fluidsynth.h>
 #include <stdlib.h>
 
-void fluidSettingsForeachOption_cgo(int in);
-
 */
 import "C"
 import (
