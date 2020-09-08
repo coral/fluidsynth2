@@ -1,10 +1,16 @@
 package fluidsynth2
 
-// #cgo pkg-config: fluidsynth
-// #include <fluidsynth.h>
-// #include <stdlib.h>
+/*
+#cgo pkg-config: fluidsynth
+#include <fluidsynth.h>
+#include <stdlib.h>
+
+void fluidSettingsForeachOption_cgo(int in);
+
+*/
 import "C"
 import (
+	"strings"
 	"unsafe"
 )
 
@@ -59,14 +65,9 @@ func (s *Settings) GetStringDefault(name string, val *string) bool {
 	return ok
 }
 
-// //export denis
-// func denis(val unsafe.Pointer) {
-// 	fmt.Println("hallo")
-// }
-
-// func (s *Settings) ForEach(name string, val *string) bool {
-// 	var cstr *C.char
-// 	var u unsafe.Pointer
-// 	C.fluid_settings_foreach_option(s.ptr, cname(name), u, unsafe.Pointer(&denis))
-// 	return false
-// }
+func (s *Settings) GetOptions(name string) []string {
+	options := C.fluid_settings_option_concat(s.ptr, cname(name), cname(", "))
+	optionsString := C.GoString(options)
+	C.free(unsafe.Pointer(options))
+	return strings.Split(optionsString, ", ")
+}

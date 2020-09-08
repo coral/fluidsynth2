@@ -1,14 +1,23 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/coral/fluidsynth2"
 )
 
 func main() {
 
 	s := fluidsynth2.NewSettings()
+	fmt.Println("Avaliable audio drivers:")
+	for _, driver := range s.GetOptions("audio.driver") {
+		fmt.Print(driver + " ")
+	}
+	// Easy way to set audio backend
+	//s.SetString("audio.driver", "coreaudio")
+
 	synth := fluidsynth2.NewSynth(s)
-	i := synth.SFLoad("soundfont.sf2", false)
+	synth.SFLoad("soundfont.sf2", false)
 
 	player := fluidsynth2.NewPlayer(synth)
 	player.Add("song.mid")
