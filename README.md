@@ -26,7 +26,7 @@ You need a MIDI file and a Soundfont in order for audio to play.
 ```go
 s := fluidsynth2.NewSettings()
 synth := fluidsynth2.NewSynth(s)
-i := synth.SFLoad("soundfont.sf2", false)
+synth.SFLoad("soundfont.sf2", false)
 
 player := fluidsynth2.NewPlayer(synth)
 player.Add("song.mid")
