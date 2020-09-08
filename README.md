@@ -57,3 +57,28 @@ for _, driver := range audioDrivers {
 
 s.SetString("audio.driver", "coreaudio")
 ```
+
+## Playing MIDI from a buffer
+
+Sometimes you want to load files through Go rather than FluidSynth, the bindings provide a simple way to play back byte slices of MIDI.
+
+```go
+s := fluidsynth2.NewSettings()
+
+synth := fluidsynth2.NewSynth(s)
+synth.SFLoad("files/soundfont.sf2", false)
+
+dat, err := ioutil.ReadFile("midifile.mid")
+if err != nil {
+	panic(err)
+}
+
+player.AddMem(dat)
+
+fluidsynth2.NewAudioDriver(s, synth)
+
+player.Play()
+player.Join()
+```
+
+![KADSBUGGEL](https://raw.githubusercontent.com/coral/fluidsynth2/master/kadsbuggel.png)
