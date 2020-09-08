@@ -26,15 +26,34 @@ This example will play a MIDI file from disk.
 You need a MIDI file and a Soundfont in order for audio to play.
 
 ```go
-	s := fluidsynth2.NewSettings()
-	synth := fluidsynth2.NewSynth(s)
-	i := synth.SFLoad("soundfont.sf2", false)
+s := fluidsynth2.NewSettings()
+synth := fluidsynth2.NewSynth(s)
+i := synth.SFLoad("soundfont.sf2", false)
 
-	player := fluidsynth2.NewPlayer(synth)
-	player.Add("song.mid")
+player := fluidsynth2.NewPlayer(synth)
+player.Add("song.mid")
 
-	fluidsynth2.NewAudioDriver(s, synth)
+fluidsynth2.NewAudioDriver(s, synth)
 
-	player.Play()
-	player.Join()
+player.Play()
+player.Join()
+```
+
+## Configuring FluidSynth
+
+Most of the methods needed to configure FluidSynth are exposed. Here is an example of how you can query FluidSynth for avaliable audio drivers.
+
+```go
+s := fluidsynth2.NewSettings()
+
+audioDrivers := s.GetOptions("audio.driver")
+
+for _, driver := range audioDrivers {
+	fmt.Print(driver + " ")
+}
+
+//Perform logic here to decide what driver to use.
+//In this case we are going to use coreaudio
+
+s.SetString("audio.driver", "coreaudio")
 ```

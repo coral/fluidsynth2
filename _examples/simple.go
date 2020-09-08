@@ -17,10 +17,10 @@ func main() {
 	//s.SetString("audio.driver", "coreaudio")
 
 	synth := fluidsynth2.NewSynth(s)
-	synth.SFLoad("soundfont.sf2", false)
+	synth.SFLoad("files/soundfont.sf2", false)
 
 	player := fluidsynth2.NewPlayer(synth)
-	player.Add("song.mid")
+	player.Add("files/song.mid")
 
 	// Example of how to play from memory
 	// dat, err := ioutil.ReadFile("midifile.mid")

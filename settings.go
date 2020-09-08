@@ -65,6 +65,8 @@ func (s *Settings) GetStringDefault(name string, val *string) bool {
 	return ok
 }
 
+//GetOptions returns the list of available options for a given setting.
+//For example: "audio.driver" returns a coreaudio on OSX and alsa on Linux if compiled with support.
 func (s *Settings) GetOptions(name string) []string {
 	options := C.fluid_settings_option_concat(s.ptr, cname(name), cname(", "))
 	optionsString := C.GoString(options)
