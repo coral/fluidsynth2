@@ -85,7 +85,7 @@ func (p *Player) GetTotalTicks() int {
 	return int(C.fluid_player_get_total_ticks(p.ptr))
 }
 
-//GetStatus returns the total tick count of the sequence
+//GetStatus returns the current status of the player
 func (p *Player) GetStatus() string {
 	status := int(C.fluid_player_get_status(p.ptr))
 
