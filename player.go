@@ -20,21 +20,21 @@ func (p *Player) Close() {
 }
 
 //Add plays files from disk
-func (p *Player) Add(filename string) int {
+func (p *Player) Add(filename string) error {
 	cpath := C.CString(filename)
 	defer C.free(unsafe.Pointer(cpath))
-	return int(C.fluid_player_add(p.ptr, cpath))
+	return fluidStatus(C.fluid_player_add(p.ptr, cpath))
 }
 
 //AddMem plays back MIDI data from a byte slice.
-func (p *Player) AddMem(data []byte) int {
+func (p *Player) AddMem(data []byte) error {
 	cb := C.CBytes(data)
 	defer C.free(unsafe.Pointer(cb))
-	return int(C.fluid_player_add_mem(p.ptr, cb, C.size_t(cap(data))))
+	return fluidStatus(C.fluid_player_add_mem(p.ptr, cb, C.size_t(cap(data))))
 }
 
-func (p *Player) Play() int {
-	return int(C.fluid_player_play(p.ptr))
+func (p *Player) Play() error {
+	return fluidStatus(C.fluid_player_play(p.ptr))
 }
 
 func (p *Player) Stop() {
@@ -46,8 +46,8 @@ func (p *Player) SetLoop(loops int) {
 	C.fluid_player_set_loop(p.ptr, C.int(loops))
 }
 
-func (p *Player) Seek(ticks int) int {
-	return int(C.fluid_player_seek(p.ptr, C.int(ticks)))
+func (p *Player) Seek(ticks int) error {
+	return fluidStatus(C.fluid_player_seek(p.ptr, C.int(ticks)))
 }
 
 //Join blocks until playback has finished

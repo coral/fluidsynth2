@@ -4,7 +4,10 @@ package fluidsynth2
 // #include <fluidsynth.h>
 // #include <stdlib.h>
 import "C"
-import "unsafe"
+import (
+	"fmt"
+	"unsafe"
+)
 
 type Synth struct {
 	ptr *C.fluid_synth_t
@@ -18,12 +21,15 @@ func (s *Synth) Close() {
 	C.delete_fluid_synth(s.ptr)
 }
 
-func (s *Synth) SFLoad(path string, resetPresets bool) int {
+func (s *Synth) SFLoad(path string, resetPresets bool) (int, error) {
 	cpath := C.CString(path)
 	defer C.free(unsafe.Pointer(cpath))
 	creset := cbool(resetPresets)
 	cfont_id, _ := C.fluid_synth_sfload(s.ptr, cpath, creset)
-	return int(cfont_id)
+	if fluidStatus(cfont_id) != nil {
+		return 0, fmt.Errorf("Could not load soundfont")
+	}
+	return int(cfont_id), nil
 }
 
 func (s *Synth) NoteOn(channel, note, velocity uint8) {

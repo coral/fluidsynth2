@@ -4,6 +4,20 @@ package fluidsynth2
 // #include <fluidsynth.h>
 // #include <stdlib.h>
 import "C"
+import "fmt"
+
+const (
+	FLUID_OK     = 0
+	FLUID_FAILED = -1
+)
+
+func fluidStatus(i C.int) error {
+	if i == FLUID_FAILED {
+		return fmt.Errorf("Fail")
+	}
+
+	return nil
+}
 
 func cbool(b bool) C.int {
 	if b {
