@@ -25,11 +25,23 @@ func (s *Synth) SFLoad(path string, resetPresets bool) (int, error) {
 	cpath := C.CString(path)
 	defer C.free(unsafe.Pointer(cpath))
 	creset := cbool(resetPresets)
-	cfont_id, _ := C.fluid_synth_sfload(s.ptr, cpath, creset)
+	cfont_id := C.fluid_synth_sfload(s.ptr, cpath, creset)
 	if fluidStatus(cfont_id) != nil {
 		return 0, fmt.Errorf("Could not load soundfont")
 	}
 	return int(cfont_id), nil
+}
+
+func (s *Synth) SFReload(sfid int) (int, error) {
+	cfont_id := C.fluid_synth_sfreload(s.ptr, C.int(sfid))
+	if fluidStatus(cfont_id) != nil {
+		return 0, fmt.Errorf("Could not reload soundfont")
+	}
+	return int(cfont_id), nil
+}
+
+func (s *Synth) SFUnload(sfid int, reset bool) error {
+	return fluidStatus(C.fluid_synth_sfunload(s.ptr, C.int(sfid), cbool(reset)))
 }
 
 func (s *Synth) NoteOn(channel, note, velocity uint8) {
