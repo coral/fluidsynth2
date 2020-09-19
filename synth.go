@@ -56,6 +56,14 @@ func (s *Synth) ProgramChange(channel, program uint8) {
 	C.fluid_synth_program_change(s.ptr, C.int(channel), C.int(program))
 }
 
+func (s *Synth) GetGain() float32 {
+	return float32(C.fluid_synth_get_gain(s.ptr))
+}
+
+func (s *Synth) SetGain(g float32) {
+	C.fluid_synth_set_gain(s.ptr, C.float(g))
+}
+
 /* WriteS16 synthesizes signed 16-bit samples. It will fill as much of the provided
 slices as it can without overflowing 'left' or 'right'. For interleaved stereo, have both
 'left' and 'right' share a backing array and use lstride = rstride = 2. ie:

@@ -4,19 +4,28 @@ package fluidsynth2
 // #include <fluidsynth.h>
 // #include <stdlib.h>
 import "C"
-import "unsafe"
+import (
+	"unsafe"
+)
 
 type Player struct {
-	ptr *C.fluid_player_t
+	ptr  *C.fluid_player_t
+	open bool
 }
 
 func NewPlayer(synth Synth) Player {
-	return Player{C.new_fluid_player(synth.ptr)}
+	return Player{
+		ptr:  C.new_fluid_player(synth.ptr),
+		open: true,
+	}
 }
 
 //Close deletes the fluid player
 func (p *Player) Close() {
-	C.delete_fluid_player(p.ptr)
+	if p.open {
+		C.delete_fluid_player(p.ptr)
+		p.open = false
+	}
 }
 
 //Add plays files from disk
