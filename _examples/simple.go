@@ -36,6 +36,10 @@ func main() {
 	fluidsynth2.NewAudioDriver(s, synth)
 
 	player.Play()
+
+	// Increase tempo
+	// player.SetTempo(fluidsynth2.TEMPO_INTERNAL, 2)
+
 	player.Join()
 
 }

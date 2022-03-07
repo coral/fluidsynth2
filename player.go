@@ -69,19 +69,25 @@ func (p *Player) GetBPM() int {
 	return int(C.fluid_player_get_bpm(p.ptr))
 }
 
-//SetBPM sets the beats per minute of the MIDI player
-func (p *Player) SetBPM(bpm int) {
-	C.fluid_player_set_bpm(p.ptr, C.int(bpm))
-}
-
 //GetTempo returns the tempo of the MIDI player (in microseconds per quarter note)
 func (p *Player) GetTempo() int {
 	return int(C.fluid_player_get_midi_tempo(p.ptr))
 }
 
+type TempoType int
+
+const (
+	TEMPO_INTERNAL      = 0
+	TEMPO_EXTERNAL_BPM  = 1
+	TEMPO_EXTERNAL_MIDI = 2
+)
+
 //SetTempo sets the tempo of the MIDI player (in microseconds per quarter note)
-func (p *Player) SetTempo(bpm int) {
-	C.fluid_player_set_midi_tempo(p.ptr, C.int(bpm))
+func (p *Player) SetTempo(t TempoType, bpm float64) {
+	if t < 0 || t > 2 {
+		t = 0
+	}
+	C.fluid_player_set_tempo(p.ptr, C.int(t), C.double(bpm))
 }
 
 //GetCurrentTick returns the number of tempo ticks passed
