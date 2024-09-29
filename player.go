@@ -5,6 +5,7 @@ package fluidsynth2
 // #include <stdlib.h>
 import "C"
 import (
+	"fmt"
 	"unsafe"
 )
 
@@ -20,7 +21,7 @@ func NewPlayer(synth Synth) Player {
 	}
 }
 
-//Close deletes the fluid player
+// Close deletes the fluid player
 func (p *Player) Close() {
 	if p.open {
 		C.delete_fluid_player(p.ptr)
@@ -28,14 +29,17 @@ func (p *Player) Close() {
 	}
 }
 
-//Add plays files from disk
+// Add plays files from disk
 func (p *Player) Add(filename string) error {
 	cpath := C.CString(filename)
 	defer C.free(unsafe.Pointer(cpath))
-	return fluidStatus(C.fluid_player_add(p.ptr, cpath))
+	if status := C.fluid_player_add(p.ptr, cpath); status == C.FLUID_FAILED {
+		return fmt.Errorf("failed to add file to player: %s", filename)
+	}
+	return nil
 }
 
-//AddMem plays back MIDI data from a byte slice.
+// AddMem plays back MIDI data from a byte slice.
 func (p *Player) AddMem(data []byte) error {
 	cb := C.CBytes(data)
 	defer C.free(unsafe.Pointer(cb))
@@ -50,7 +54,7 @@ func (p *Player) Stop() {
 	C.fluid_player_stop(p.ptr)
 }
 
-//SetLoop enables the MIDI player to loop the playlist. -1 means loop infinitely
+// SetLoop enables the MIDI player to loop the playlist. -1 means loop infinitely
 func (p *Player) SetLoop(loops int) {
 	C.fluid_player_set_loop(p.ptr, C.int(loops))
 }
@@ -59,17 +63,17 @@ func (p *Player) Seek(ticks int) error {
 	return fluidStatus(C.fluid_player_seek(p.ptr, C.int(ticks)))
 }
 
-//Join blocks until playback has finished
+// Join blocks until playback has finished
 func (p *Player) Join() {
 	C.fluid_player_join(p.ptr)
 }
 
-//GetBPM returns the beats per minute of the MIDI player
+// GetBPM returns the beats per minute of the MIDI player
 func (p *Player) GetBPM() int {
 	return int(C.fluid_player_get_bpm(p.ptr))
 }
 
-//GetTempo returns the tempo of the MIDI player (in microseconds per quarter note)
+// GetTempo returns the tempo of the MIDI player (in microseconds per quarter note)
 func (p *Player) GetTempo() int {
 	return int(C.fluid_player_get_midi_tempo(p.ptr))
 }
@@ -82,7 +86,7 @@ const (
 	TEMPO_EXTERNAL_MIDI = 2
 )
 
-//SetTempo sets the tempo of the MIDI player (in microseconds per quarter note)
+// SetTempo sets the tempo of the MIDI player (in microseconds per quarter note)
 func (p *Player) SetTempo(t TempoType, bpm float64) {
 	if t < 0 || t > 2 {
 		t = 0
@@ -90,17 +94,17 @@ func (p *Player) SetTempo(t TempoType, bpm float64) {
 	C.fluid_player_set_tempo(p.ptr, C.int(t), C.double(bpm))
 }
 
-//GetCurrentTick returns the number of tempo ticks passed
+// GetCurrentTick returns the number of tempo ticks passed
 func (p *Player) GetCurrentTick() int {
 	return int(C.fluid_player_get_current_tick(p.ptr))
 }
 
-//GetTotalTicks returns the total tick count of the sequence
+// GetTotalTicks returns the total tick count of the sequence
 func (p *Player) GetTotalTicks() int {
 	return int(C.fluid_player_get_total_ticks(p.ptr))
 }
 
-//GetStatus returns the current status of the player
+// GetStatus returns the current status of the player
 func (p *Player) GetStatus() string {
 	status := int(C.fluid_player_get_status(p.ptr))
 

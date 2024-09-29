@@ -7,8 +7,12 @@ import "C"
 import "fmt"
 
 const (
-	FLUID_OK     = 0
-	FLUID_FAILED = -1
+	FLUID_OK     = C.FLUID_OK
+	FLUID_FAILED = C.FLUID_FAILED
+
+	MAX_MIDI_CHANNEL  = 16
+	MAX_MIDI_NOTE     = 127
+	MAX_MIDI_VELOCITY = 127
 )
 
 func fluidStatus(i C.int) error {
