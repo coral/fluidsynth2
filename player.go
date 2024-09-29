@@ -31,6 +31,9 @@ func (p *Player) Close() {
 
 // Add plays files from disk
 func (p *Player) Add(filename string) error {
+	if !p.open {
+		return fmt.Errorf("player is closed")
+	}
 	cpath := C.CString(filename)
 	defer C.free(unsafe.Pointer(cpath))
 	if status := C.fluid_player_add(p.ptr, cpath); status == C.FLUID_FAILED {
@@ -41,9 +44,15 @@ func (p *Player) Add(filename string) error {
 
 // AddMem plays back MIDI data from a byte slice.
 func (p *Player) AddMem(data []byte) error {
+	if !p.open {
+		return fmt.Errorf("player is closed")
+	}
+	if len(data) == 0 {
+		return fmt.Errorf("empty MIDI data")
+	}
 	cb := C.CBytes(data)
 	defer C.free(unsafe.Pointer(cb))
-	return fluidStatus(C.fluid_player_add_mem(p.ptr, cb, C.size_t(cap(data))))
+	return fluidStatus(C.fluid_player_add_mem(p.ptr, cb, C.size_t(len(data))))
 }
 
 func (p *Player) Play() error {
@@ -87,11 +96,15 @@ const (
 )
 
 // SetTempo sets the tempo of the MIDI player (in microseconds per quarter note)
-func (p *Player) SetTempo(t TempoType, bpm float64) {
-	if t < 0 || t > 2 {
-		t = 0
+func (p *Player) SetTempo(t TempoType, bpm float64) error {
+	if !p.open {
+		return fmt.Errorf("player is closed")
+	}
+	if t < TEMPO_INTERNAL || t > TEMPO_EXTERNAL_MIDI {
+		return fmt.Errorf("invalid tempo type: %d", t)
 	}
 	C.fluid_player_set_tempo(p.ptr, C.int(t), C.double(bpm))
+	return nil
 }
 
 // GetCurrentTick returns the number of tempo ticks passed
@@ -105,19 +118,22 @@ func (p *Player) GetTotalTicks() int {
 }
 
 // GetStatus returns the current status of the player
-func (p *Player) GetStatus() string {
+func (p *Player) GetStatus() (string, error) {
+	if !p.open {
+		return "", fmt.Errorf("player is closed")
+	}
 	status := int(C.fluid_player_get_status(p.ptr))
 
 	//Codes documented here http://www.fluidsynth.org/api/midi_8h.html#a5ec93766f61465dedbbac9bdb76ced83
 
 	switch status {
 	case 0:
-		return "READY"
+		return "READY", nil
 	case 1:
-		return "PLAYING"
+		return "PLAYING", nil
 	case 2:
-		return "DONE"
+		return "DONE", nil
 	default:
-		return "UNKNOWN"
+		return "UNKNOWN", fmt.Errorf("unknown status code: %d", status)
 	}
 }
