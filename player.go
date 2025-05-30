@@ -134,13 +134,13 @@ func (p *Player) GetStatus() (string, error) {
 	//Codes documented here http://www.fluidsynth.org/api/midi_8h.html#a5ec93766f61465dedbbac9bdb76ced83
 
 	switch status {
-	case 0:
+	case C.FLUID_PLAYER_READY:
 		return FLUID_PLAYER_READY, nil
-	case 1:
+	case C.FLUID_PLAYER_PLAYING:
 		return FLUID_PLAYER_PLAYING, nil
-	case 2:
+	case C.FLUID_PLAYER_STOPPING:
 		return FLUID_PLAYER_STOPPING, nil
-	case 3:
+	case C.FLUID_PLAYER_DONE:
 		return FLUID_PLAYER_DONE, nil
 	default:
 		return "UNKNOWN", fmt.Errorf("unknown status code: %d", status)
