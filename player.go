@@ -14,6 +14,13 @@ type Player struct {
 	open bool
 }
 
+const (
+	FLUID_PLAYER_READY    = "READY"
+	FLUID_PLAYER_PLAYING  = "PLAYING"
+	FLUID_PLAYER_STOPPING = "STOPPING"
+	FLUID_PLAYER_DONE     = "DONE"
+)
+
 func NewPlayer(synth Synth) Player {
 	return Player{
 		ptr:  C.new_fluid_player(synth.ptr),
@@ -127,12 +134,14 @@ func (p *Player) GetStatus() (string, error) {
 	//Codes documented here http://www.fluidsynth.org/api/midi_8h.html#a5ec93766f61465dedbbac9bdb76ced83
 
 	switch status {
-	case 0:
-		return "READY", nil
-	case 1:
-		return "PLAYING", nil
-	case 2:
-		return "DONE", nil
+	case C.FLUID_PLAYER_READY:
+		return FLUID_PLAYER_READY, nil
+	case C.FLUID_PLAYER_PLAYING:
+		return FLUID_PLAYER_PLAYING, nil
+	case C.FLUID_PLAYER_STOPPING:
+		return FLUID_PLAYER_STOPPING, nil
+	case C.FLUID_PLAYER_DONE:
+		return FLUID_PLAYER_DONE, nil
 	default:
 		return "UNKNOWN", fmt.Errorf("unknown status code: %d", status)
 	}
