@@ -84,3 +84,7 @@ player.Join()
 m8 just open a PR with some gucchimucchi code and I'll review it.
 
 ![KADSBUGGEL](https://raw.githubusercontent.com/coral/fluidsynth2/master/kadsbuggel.png)
+
+## AI DISCLAIMER
+
+I initially wrote this by hand but have given it a pass of AI SLOP. Everything pre 2025 is A R T I S I N A L but now we're fully in slop city. **no warranties express or implied** etc etc. Honestly the package is improved because of it IMO.
